@@ -58,6 +58,12 @@ updateIp()
     IP=$(wget -q -O - $GET_IP_URL)
 }
 
+currentResolve()
+{
+    LASTIP=$(dig +short $SUBDOMAIN.$DOMAIN)
+}
+
+
 getJSONString()
 {
     JSON="$1"
@@ -131,6 +137,13 @@ main()
     checkInternetConnexion
 
     updateIp
+    currentResolve
+    if [ "$IP" == "$LASTIP" ] ; then
+        echo "No update needed"
+        exit 0
+    fi
+
+  
     getIds
 
     if [ $(getJSONArrayLength $IDS) -gt 1 ]
